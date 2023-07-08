@@ -1,5 +1,4 @@
-﻿float balance = 0, inputUser;
-int quantityOfGoods, idOfGoods, lastNumber, maxValue = 12500000;
+﻿int balance = 0, inputUser, quantityOfGoods, idOfGoods, lastNumber, maxValue = 12500000, paymentMethod, minPrice = int.MaxValue;
 
 Product lays = new("Lays", 200, 2);
 Product snickers = new("Snickers", 80, 4);
@@ -21,13 +20,13 @@ ShowGoods();
 Console.Write("\n");
 ShowBalance();
 TopWallet();
-СhoiceGoods();
-Continue();
+//СhoiceGoods();
+//Continue();
 
 void TopWallet()
 {
     Console.WriteLine("Выберите тип пополнения баланса:\n 1. Банковской картой \n 2. Монетами");
-    while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1 )
+    while (!int.TryParse(Console.ReadLine(), out paymentMethod) || paymentMethod > 2 || paymentMethod < 1)
     {
         Console.Clear();
         ShowGoods();
@@ -36,67 +35,69 @@ void TopWallet()
     }
     Console.Clear();
 
-    switch (inputUser)
+    switch (paymentMethod)
     {
         case 1:
-            Console.WriteLine("Введите сумму, на которую хотите пополнить баланс:");
-            while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser <= 0)
-                Error("Введите сумму, на которую хотите пополнить баланс:");
+            Console.Clear();
 
+            Console.Write("Введите сумму, на которую хотите пополнить баланс: ");
+            while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser <= 0)
+            {
+                Console.Clear();
+                Error("Введите сумму, на которую хотите пополнить баланс:");
+            }
             AddMoney(inputUser);
-            Console.WriteLine($"Ваш баланс: {balance} рублей");
+            Console.Clear();
+            СhoiceGoods();
+
             break;
         case 2:
             ShowBalance();
 
             Console.Write("Необходимо поочередно ввести монетки номиналом 1, 2, 5, 10\n\nВведите кол-во монет номиналом 1: ");
-            while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
+            while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
             {
                 Console.Clear();
                 Error("Введите кол-во монет номиналом 1: ");
             }
             AddMoney(inputUser);
-            maxValue -= Convert.ToInt32(inputUser);
             Console.Clear();
 
             ShowBalance();
             Console.Write("Необходимо поочередно ввести монетки номиналом 1, 2, 5, 10\n\nВведите кол-во монет номиналом 2: ");
-            while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
+            while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
             {
                 Console.Clear();
                 Error("Введите кол-во монет номиналом 2: ");
             }
             AddMoney(inputUser * 2);
-            maxValue -= Convert.ToInt32(inputUser);
             Console.Clear();
 
             ShowBalance();
             Console.Write("Необходимо поочередно ввести монетки номиналом 1, 2, 5, 10\n\nВведите кол-во монет номиналом 5: ");
-            while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
+            while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
             {
                 Console.Clear();
                 Error("Введите кол-во монет номиналом 5: ");
             }
             AddMoney(inputUser * 5);
-            maxValue -= Convert.ToInt32(inputUser);
             Console.Clear();
 
             ShowBalance();
             Console.Write("Необходимо поочередно ввести монетки номиналом 1, 2, 5, 10\n\nВведите кол-во монет номиналом 10: ");
-            while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
+            while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser < 0 || inputUser > maxValue)
             {
                 Console.Clear();
                 Error("Введите кол-во монет номиналом 10: ");
             }
             AddMoney(inputUser * 10);
-            maxValue -= Convert.ToInt32(inputUser);
             Console.Clear();
+            СhoiceGoods();
             break;
         default:
             Console.WriteLine("Такого типа не существует");
             break;
     }
-
 }
 void СhoiceGoods()
 {
@@ -104,8 +105,8 @@ void СhoiceGoods()
     Console.WriteLine("\n");
     ShowBalance();
 
-    Console.WriteLine("Введите номер товара, который хотите взять: ");
-    while (!int.TryParse(Console.ReadLine(), out idOfGoods) || idOfGoods <= 0 || idOfGoods > produts.Count)
+    Console.Write("Введите номер товара, который хотите взять: ");
+    while (!int.TryParse(Console.ReadLine(), out idOfGoods) || idOfGoods <= 0 || idOfGoods > produts.Count || produts[idOfGoods - 1].Quantity == 0)
     {
         Console.Clear();
         ShowGoods();
@@ -114,7 +115,7 @@ void СhoiceGoods()
         Error("Введите номер товара, который хотите взять: ");
     }
 
-    Console.WriteLine("Введите кол-во товара, который хотите взять: ");
+    Console.Write("Введите кол-во товара, который хотите взять: ");
     while (!int.TryParse(Console.ReadLine(), out quantityOfGoods) || quantityOfGoods < 0 || quantityOfGoods > produts[idOfGoods - 1].Quantity)
     {
         Console.Clear();
@@ -124,8 +125,9 @@ void СhoiceGoods()
         Error("Введите кол-во товара, который хотите взять: ");
     }
     BuyGood(idOfGoods - 1, quantityOfGoods);
+    Continue();
 }
-void AddMoney(float value) => balance += value;
+void AddMoney(int value) => balance += value;
 void ShowGoods()
 {
     for (int i = 0; i < produts.Count; i++)
@@ -144,7 +146,7 @@ void BuyGood(int id, int count)
         ShowGoods();
         Console.WriteLine("\n");
         ShowBalance();
-        Continue();
+        //Continue();
     }
     else
     {
@@ -160,128 +162,139 @@ void ShowBalance()
 }
 void Continue()
 {
-    Console.WriteLine("Хотите купить что-то еще?:\n 1. Да \n 2. Нет");
-    while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1)
+    for (int i = 0; i < produts.Count; i++)
     {
-        Console.Clear();
-        ShowGoods();
-        Console.Write("\n");
-        Error("Хотите купить что-то еще?:\n 1. Да \n 2. Нет\n");
+        if (minPrice > produts[i].Price)
+        {
+            minPrice = produts[i].Price;
+        }
     }
-    Console.Clear();
-    switch (inputUser)
+    if (balance < minPrice)
     {
-        case 1:
-            СhoiceGoods();
-            break;
-        case 2:
-            GetChance();
-            break;
-        default:
-            Console.WriteLine("Такого типа не существует");
-            break;
+        GetChance();
+    }
+    else
+    {
+        Console.WriteLine("Хотите купить что-то еще?:\n 1. Да \n 2. Нет");
+        while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1)
+        {
+            Console.Clear();
+            ShowGoods();
+            Console.Write("\n");
+            Error("Хотите купить что-то еще?:\n 1. Да \n 2. Нет\n");
+        }
+        Console.Clear();
+        switch (inputUser)
+        {
+            case 1:
+                СhoiceGoods();
+                break;
+            case 2:
+                GetChance();
+                break;
+            default:
+                Console.WriteLine("Такого типа не существует");
+                break;
+        }
     }
 }
 void GetChance()
 {
-    Console.Clear();
-    int one = 0, two = 0, five = 0, ten = 0;
-    while (balance > 0)
+    if (paymentMethod == 1)
     {
-        lastNumber = Convert.ToInt32(balance % 10);
-        if (balance % 10 == 0)
+        Console.WriteLine("Сдача выслана на вашу карту");
+        balance = 0;
+        Console.WriteLine("Распечатать чек?:\n 1. Да \n 2. Нет");
+        while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1)
         {
-            balance -= 10;
-            ten++;
+            Console.Clear();
+            ShowGoods();
+            Console.Write("\n");
+            Error("Распечатать чек?:\n 1. Да \n 2. Нет\n");
         }
-        else if (balance % 5 == 0)
-        {
-            balance -= 5;
-            five++;
-        }
-        else if (balance % 2 == 0)
-        {
-            if (lastNumber == 6)
-            {
-                balance -= 5;
-                five++;
-
-                balance -= 1;
-                one++;
-            }
-            else
-            {
-                balance -= 2;
-                two++;
-            }
-
-        }
-        else
-        {
-            if (lastNumber == 7)
-            {
-                balance -= 5;
-                five++;
-
-                balance -= 2;
-                two++;
-
-            }
-            else if (lastNumber == 9)
-            {
-                balance -= 5;
-                five++;
-
-                balance -= 2;
-                two++;
-
-                balance -= 2;
-                two++;
-            }
-            else
-            {
-                balance -= 1;
-                one++;
-            }
-        }
-    }
-    Console.WriteLine($"Сдача выдана монетами следующего номенала: \n1р - {one}\n2р - {two}\n5р - {five}\n10р - {ten}\n");
-    Console.WriteLine("Распечатать чек?:\n 1. Да \n 2. Нет");
-    while (!float.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1)
-    {
         Console.Clear();
         ShowGoods();
         Console.Write("\n");
-        Error("Распечатать чек?:\n 1. Да \n 2. Нет");
+        ShowBalance();
+        TopWallet();
     }
-    Console.Clear();
-    switch (inputUser)
+    else
     {
-        case 1:
+        Console.Clear();
+        int one = 0, two = 0, five = 0, ten = 0;
+        while (balance > 0)
+        {
+            lastNumber = Convert.ToInt32(balance % 10);
+            if (balance % 10 == 0)
+            {
+                balance -= 10;
+                ten++;
+            }
+            else if (balance % 5 == 0)
+            {
+                balance -= 5;
+                five++;
+            }
+            else if (balance % 2 == 0)
+            {
+                if (lastNumber == 6)
+                {
+                    balance -= 5;
+                    five++;
+
+                    balance -= 1;
+                    one++;
+                }
+                else
+                {
+                    balance -= 2;
+                    two++;
+                }
+
+            }
+            else
+            {
+                if (lastNumber == 7)
+                {
+                    balance -= 5;
+                    five++;
+
+                    balance -= 2;
+                    two++;
+
+                }
+                else if (lastNumber == 9)
+                {
+                    balance -= 5;
+                    five++;
+
+                    balance -= 2;
+                    two++;
+
+                    balance -= 2;
+                    two++;
+                }
+                else
+                {
+                    balance -= 1;
+                    one++;
+                }
+            }
+        }
+        Console.WriteLine($"Сдача выдана монетами следующего номенала: \n1р - {one}\n2р - {two}\n5р - {five}\n10р - {ten}\n");
+        Console.WriteLine("Распечатать чек?:\n 1. Да \n 2. Нет");
+        while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1)
+        {
             Console.Clear();
-            Console.WriteLine("Добро пожаловать!");
-            Console.Write("\n");
             ShowGoods();
             Console.Write("\n");
-            ShowBalance();
-            TopWallet();
-            СhoiceGoods();
-            Continue();
-            break;
-        case 2:
-            Console.Clear();
-            Console.WriteLine("Добро пожаловать!");
-            Console.Write("\n");
-            ShowGoods();
-            Console.Write("\n");
-            ShowBalance();
-            TopWallet();
-            СhoiceGoods();
-            Continue();
-            break;
-        default:
-            Console.WriteLine("Такого типа не существует");
-            break;
+            Error("Распечатать чек?:\n 1. Да \n 2. Нет\n");
+        }
+        Console.Clear();
+        ShowGoods();
+        Console.Write("\n");
+        ShowBalance();
+        TopWallet();
     }
 }
 void Error(string message)
