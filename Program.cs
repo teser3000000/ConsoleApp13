@@ -20,12 +20,9 @@ Console.WriteLine("Добро пожаловать!");
 Console.Write("\n");
 ShowСommands();
 
-//ShowGoods();
+
 Console.Write("\n");
-//ShowBalance();
-//TopWallet();
-//СhoiceGoods();
-//Continue();
+
 
 void TopWallet()
 {
@@ -217,44 +214,7 @@ void ShowBalance()
 {
     Console.WriteLine($"Ваш баланс: {balance} рублей");
 }
-void Continue()
-{
-    for (int i = 0; i < produts.Count; i++)
-    {
-        if (minPrice > produts[i].Price)
-        {
-            minPrice = produts[i].Price;
-        }
-    }
-    if (balance < minPrice)
-    {
-        GetChance();
-    }
-    else
-    {
-        Console.WriteLine("Хотите купить что-то еще?:\n 1. Да \n 2. Нет");
-        while (!int.TryParse(Console.ReadLine(), out inputUser) || inputUser > 2 || inputUser < 1)
-        {
-            Console.Clear();
-            ShowGoods();
-            Console.Write("\n");
-            Error("Хотите купить что-то еще?:\n 1. Да \n 2. Нет\n");
-        }
-        Console.Clear();
-        switch (inputUser)
-        {
-            case 1:
-                СhoiceGoods();
-                break;
-            case 2:
-                GetChance();
-                break;
-            default:
-                Console.WriteLine("Такого типа не существует");
-                break;
-        }
-    }
-}
+
 void GetChance()
 {
     Console.Clear();
@@ -429,7 +389,7 @@ void AdminPanel()
 void PrintTheReceipt()
 {
     Console.WriteLine("Распечатать чек?:\n 1.Да -- y \n 2.Нет -- n");
-    Console.ReadLine(); 
+    Console.ReadLine();
     paymentMethod = 3;
     Break();
 }
