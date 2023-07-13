@@ -140,12 +140,12 @@ void ShowСommands()
 {
     Console.WriteLine("Введите следующие команды на выбор:\n1. AddMoney -- Пополнить счёт\n2. GetChange -- Получить сдачу\n3. ShowGoods -- Отобразить товары\n4. BuyGoods -- Купить товары");
     inputUserString = Console.ReadLine();
-    if (inputUserString == "AddMoney")
+    if (inputUserString.ToLower() == "addmoney")
     {
         Console.Clear();
         TopWallet();
     }
-    else if (inputUserString == "GetChange")
+    else if (inputUserString.ToLower() == "getchange")
     {
         if (paymentMethod == 3)
         {
@@ -155,7 +155,7 @@ void ShowСommands()
         }
         else { GetChance(); }
     }
-    else if (inputUserString == "ShowGoods")
+    else if (inputUserString.ToLower() == "showgoods")
     {
         Console.Clear();
         ShowGoods();
@@ -163,9 +163,9 @@ void ShowСommands()
         Console.ReadLine();
         Break();
     }
-    else if (inputUserString == "BuyGoods")
+    else if (inputUserString.ToLower() == "buygoods")
     {
-        if (balance <= 0 || balance < minPrice)
+        if (balance <= 0 && balance < minPrice)
         {
             Console.Clear();
             Error("Пополните баланс\n");
@@ -176,6 +176,11 @@ void ShowСommands()
             Console.Clear();
             СhoiceGoods();
         }
+    }
+    else if (inputUserString.ToLower() == "adminpanel")
+    {
+        Console.Clear();
+
     }
     else
     {
@@ -196,7 +201,7 @@ void BuyGood(int id, int count)
     if ((produts[id].Price * count) <= balance)
     {
         balance -= produts[id].Price * count;
-        produts[id].Sale(count);
+        produts[id].Buy(count);
         Console.Clear();
         ShowGoods();
         Console.WriteLine("\n");
@@ -355,6 +360,10 @@ void GetChance()
         //ShowBalance();
         //TopWallet();
     }
+}
+void AdminPanel()
+{
+
 }
 void Error(string message)
 {

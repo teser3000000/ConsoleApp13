@@ -9,7 +9,7 @@
         Price = price;
         Quantity = quantity;
     }
-    public void Sale(int value)
+    public void Buy(int value)
     {
         Quantity -= value;
     }
